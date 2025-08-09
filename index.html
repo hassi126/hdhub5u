@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightslider/dist/js/lightslider.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider/dist/css/lightslider.min.css">
+    <title>hassi4umovies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0b3d0b;
+            color: white;
+            text-align: center;
+        }
+
+        /* Gradient Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(90deg, #004d00, #008000);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 5px;
+        }
+
+        .search-box input {
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            width: 200px;
+            transition: 0.3s;
+        }
+
+        .search-box button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ffcc00;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background-color: #ffdb4d;
+        }
+
+        /* Mobile View */
+        .menu-button, .search-icon {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            header {
+                justify-content: space-between;
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .logo {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .search-icon {
+                display: block;
+                font-size: 22px;
+            }
+        }
+
+        /* Dropdown Menu */
+        .menu {
+            display: none;
+            background-color: #004d00;
+            padding: 10px;
+            position: absolute;
+            left: 10px;
+            top: 50px;
+            width: 170px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-bottom: 1px solid #008000;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            background-color: #008000;
+        }
+
+        /* Search Bar for Mobile */
+        .mobile-search-box {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background-color: #004d00;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-search-box input {
+            padding: 7px;
+            width: 170px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        /* Category Buttons */
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px;
+        }
+
+        .category {
+            background: linear-gradient(90deg, #008000, #00b300);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .category:hover {
+            background: linear-gradient(90deg, #00b300, #008000);
+            transform: scale(1.1);
+        }
+
+        /* Info Box */
+        .info-box {
+            background-color: #004d00;
+            padding: 15px;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .logo4{
+            height: 50px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- MainFile -->
+
+    <header>
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
+        <!-- Main File -->
+        <a href="index.html">
+        <img src="haslogo.png" class="logo4">
+    </a>
+        <div class="search-box">
+            <input type="text" placeholder="Search...">
+            <button>🔍</button>
+        </div>
+        <button class="search-icon" onclick="toggleSearch()">🔍</button>
+        <div class="mobile-search-box" id="mobileSearchBox">
+        <input type="text" placeholder="Search...">
+    </div>
+    <div class="menu" id="dropdownMenu">
+        <a href="https://hassi4umovies.netlify.app/">Home</a>
+        <a href="#">Categories</a>
+        <a href="#">Latest Movies</a>
+        <a href="#">Contact Us</a>
+    </div>
+    </header>
+
+    <!-- Mobile Dropdown Menu -->
+    
+
+    <!-- Mobile Search Box -->
+    
+    
+    <main>
+        <div class="category-container"> 
+            <button class="category" onclick="window.location.href='https://hassi4umovies.netlify.app/'">Home</button>
+            <button class="category" onclick="showMessage()">Bollywood Movies</button>
+            <button class="category" onclick="showMessage()">Hollywood Movies</button>
+            <button class="category" onclick="showMessage()">Punjabi Movies</button>
+            <button class="category" onclick="showMessage()">Pakistani Movies</button>
+            <button class="category" onclick="showMessage()">Animation Movies</button>
+            <button class="category" onclick="showMessage()">Hindi Dubbed Movies</button>
+            <button class="category" onclick="showMessage()">Web Series</button>
+            <button class="category" onclick="showMessage()">Kannada Movies</button>
+            <button class="category" onclick="showMessage()">Malayalam Movies</button>
+            <button class="category" onclick="showMessage()">Marathi Movies</button>
+            <button class="category" onclick="showMessage()">Punjabi Movies</button>
+            <button class="category" onclick="showMessage()">South Movies</button>
+            <button class="category" onclick="showMessage()">Tagalog Movies</button>
+            <button class="category" onclick="showMessage()">Tamil Movies</button>
+            <button class="category" onclick="showMessage()">Telugu Movies</button>
+        </div>
+        
+        <script>
+            function showMessage() {
+                alert("Movies Uploaded By Categories Soon");
+            }
+        </script>
+        
+        
+        <div class="info-box">
+            hassi4u, hassi4u Movies, Dual Audio Movies In 480p Movies, 720p Movies, 300mb Movies, Hindi Dubbed Series Download at hassi4umovies.
+        </div>
+    </main>
+    <style>
+        .h23{
+            color: red;
+            font-size: 20px;
+        }
+    </style>
+            <div id="notification-popup">
+                <p>Old and New Movies will be Uploaded Soon!
+                    Save This Website Address.
+                    <h class="h23">
+                    Share This Web Addres To Your Friends&Family.
+                </h>
+                </p>
+                <button id="dismiss-btn">Dismiss</button>
+              </div>
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdownMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        function toggleSearch() {
+            var searchBox = document.getElementById("mobileSearchBox");
+            searchBox.style.display = searchBox.style.display === "block" ? "none" : "block";
+        }
+    </script>
+<div id="home" class="content active">
+    <!-- Latest Movies Section -->
+    <section id="latest">
+        <h2 class="latest-heading"><strong>Latest Movies</strong></h2>
+        <ul id="autoWidth2" class="cs-hidden">
+            <li class="item-a">
+                <div class="latest-box">
+                    <div class="latest-b-img">
+                        <img src="https://myimg.click/images/2025/02/08/Thandel-2025.jpg">
+                    </div>
+                    <div class="latest-b-text">
+                        <strong>Thandel 2025 WEBRip Hindi Dual Audio Full Movie Watch and Download 1080p 720p 480p</strong>
+                        <p> Action</p>
+                        <div>
+                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                        </div>
+                    </div>
+                </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <div class="latest-b-img">
+                            <img src="https://myimg.click/images/2025/02/08/Vidaamuyarchi-2025.png">
+                        </div>
+                        <div class="latest-b-text">
+                            <strong>Vidaamuyarchi 2025 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                            <p> Action</p>
+                            <div>
+                                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <li class="item-a">
+                        <div class="latest-box">
+                            <div class="latest-b-img">
+                                <img src="https://myimg.click/images/2025/02/09/Panjab-Files-2024.jpg">
+                            </div>
+                            <div class="latest-b-text">
+                                <strong>Punjab Files 2024 WEBRip Punjabi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                                <p>History</p>
+                                <div>
+                                    <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                                </div>
+                            </div>
+                        </div>
+            <li class="item-a">
+                <div class="latest-box">
+                    <div class="latest-b-img">
+                        <img src="https://myimg.click/images/2025/01/12/Sookshmadarshini-2024.jpg">
+                    </div>
+                    <div class="latest-b-text">
+                        <strong>Sookshma_Darshini 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                        <p> Story</p>
+                        <div>
+                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                        </div>
+                    </div>
+                </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <div class="latest-b-img">
+                            <img src="https://myimg.click/images/2025/02/05/oie_57271KK0DCXMB.jpg">
+                        </div>
+                        <div class="latest-b-text">
+                            <strong>Baby_John 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                            <p>Action</p>
+                            <div>
+                                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <li class="item-a">
+                        <div class="latest-box">
+                            <div class="latest-b-img">
+                                <img src="https://myimg.click/images/2024/11/29/Sikandar-Ka-Muqaddar-2024.jpg">
+                            </div>
+                            <div class="latest-b-text">
+                                <strong>Sikandar_ka_Muqaddar 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                                <p> Story</p>
+                                <div>
+                                    <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                                </div>
+                            </div>
+                        </div>
+                        <li class="item-a">
+                            <div class="latest-box">
+                                <div class="latest-b-img">
+                                    <img src="https://myimg.click/images/2025/01/11/Bachhala-Malli-2024.jpg">
+                                </div>
+                                <div class="latest-b-text">
+                                    <strong>Bachhala_Malli 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                                    <p>Action</p>
+                                    <div>
+                                        <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <li class="item-a">
+                                <div class="latest-box">
+                                    <div class="latest-b-img">
+                                        <img src="https://myimg.click/images/2025/01/14/Sorgavaasal-2024.jpg">
+                                    </div>
+                                    <div class="latest-b-text">
+                                        <strong>Sorgavaasal 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
+                                        <p> Story</p>
+                                        <div>
+                                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                                        </div>
+                                    </div>
+                                </div>
+            <li class="item-a">
+                <div class="latest-box">
+                    <div class="latest-b-img">
+                        <img src="https://myimg.click/images/2025/01/31/Tabaah-2024.jpg">
+                    </div>
+                    <div class="latest-b-text">
+                        <strong>Tabbah 2024 WEBRip Punjabi Dual Audio Full Movie Watch And Download 1080p 720p 480p</strong>
+                        <p>Love Story</p>
+                        <div>
+                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                        </div>
+                    </div>
+                </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <div class="latest-b-img">
+                            <img src="https://myimg.click/images/2025/01/16/Bapu-Ni-Manda.jpg">
+                        </div>
+                        <div class="latest-b-text">
+                            <strong>Bapu Ni Manda Mera 2024 WEBRip Punjabi Dual Audio Full Movie Watch And Download 720p</strong>
+                            <p>Comedy</p>
+                            <div>
+                                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+                            </div>
+                        </div>
+                    </div>
+            </li>
+            <!-- More movie items here -->
+        </ul>
+    </section>
+                <!--AD---------------------------->
+                <script async="async" data-cfasync="false" src="//pl25504611.profitablecpmrate.com/527d859c57aab2a2738456bdaa84463d/invoke.js"></script>
+<div id="container-527d859c57aab2a2738456bdaa84463d"></div>
+<!--movies---------------------------->
+<div class="movies-heading">
+    <h2><strong>All Movies</strong></h2>
+</div>
+<section id="movies-list">
+    <!--box-1------------------------>
+    
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://myimg.click/images/2025/01/31/Tabaah-2024.jpg">
+        </div>
+        <!--text--------->
+        <a>
+       <strong> Tabbah.2024.WEBRip.Punjabi Dual Audio Full Movie Watch&Download 720p </strong>           </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://myimg.click/images/2025/01/16/Bapu-Ni-Manda.jpg">
+        </div>
+        <!--text--------->
+        <a>
+            <strong>Bapu.Ni.Manda.Mera..2024.WEBRip.Punjabi Dual Audio Full Movie Watch&Download 720p</strong>
+
+            </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+   
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://myimg.click/images/2025/01/16/Bapu-Ni-Manda.jpg">
+        </div>
+        <!--text--------->
+        <a>
+           <strong> Karwan (2018) Full Movie[In Hindi] With English Subtitles | HDRip 1080p HD</strong>
+        </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+
+    <!--box-2------------------------>
+    
+    <!--box-3------------------------>
+    
+    <!--box-4------------------------>
+    
+    <!--box-5------------------------>
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://fzmovies.live/imdb_images/Kabhi%20Khushi%20Kabhie%20Gham....jpg">
+        </div>
+        <!--text--------->
+        <a>
+           <strong> Kabhi Khushi Kabhie Gham... (2001) Full Movie[In Hindi] With English Subtitles | HDRip 720 HD</strong>
+        </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+    <!--box-6------------------------>
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://fzmovies.live/imdb_images/Baazigar.1993.jpg">
+        </div>
+        <!--text--------->
+        <a>
+            <strong>Baazigar (1993)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong>
+        </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+    
+    <!--box-7------------------------>
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://fzmovies.live/imdb_images/Don.jpg">
+        </div>
+        <!--text--------->
+        <a>
+            <strong>Don (2006)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong>
+        </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+        <!--text--------->
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="https://fzmovies.live/imdb_images/Dil%20Wale%20Dulhania%20Le%20Jayenge.jpg">
+            </div>
+            <!--text--------->
+            <a>
+               <strong> Dilwale Dulhania Le Jayenge (1995)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong>
+            </a>
+            <div>
+                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+            </div>
+        </div>
+    <!--box-8------------------------>
+    <div class="movies-box">
+        <!--img------------>
+        <div class="movies-img">
+            <div class="quality">HDRip</div>
+            <img src="https://fzmovies.live/imdb_images/Dilwale_(2015).jpg">
+        </div>
+        <!--text--------->
+        <a>
+           <strong>Dilwale (2015)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong> 
+        </a>
+        <div>
+            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Video Modal -->
+    <div id="video-container">
+        <iframe id="movie-video" width="100%" height="480" src="" scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
+        <button class="close-btn" onclick="closeVideo()">×</button>
+        <button class="download-btn" id="download-btn" onclick="handleDownload()">Download</button>
+        <div class="message-box" id="message-box">
+            <button class="close-btn" onclick="closeMessageBox()">×</button>
+            <p>Copy the video link:</p>
+            <input type="text" id="video-link" readonly style="width: 90%; text-align: center;">
+            <p>And visit this site: <a href="https://snapsave.cc/okru-video-downloader/" target="_blank">Video Downloader</a></p>
+        </div>
+    </div>
+
+    
+    <script>
+        // Function to display the video modal
+        let downloadClicked = false;
+        let currentVideoId = "";
+
+        // Function to show the video in modal
+        function showVideo(videoId) {
+            const videoContainer = document.getElementById('video-container');
+            const iframe = document.querySelector('#video-container iframe');
+
+            // Construct the Veev embed link dynamically
+            currentVideoId = videoId;
+            const videoEmbedLink = `https://veev.to/e/${videoId}`;
+            iframe.src = videoEmbedLink;
+
+            // Show the video container
+            videoContainer.style.display = "flex";
+            downloadClicked = false; // Reset the download button state
+            document.getElementById('message-box').style.display = "none"; // Hide message box if shown
+        }
+
+        // Function to close the video modal
+        function closeVideo() {
+            const iframe = document.querySelector('#video-container iframe');
+            const videoContainer = document.getElementById('video-container');
+
+            // Clear the iframe source to stop the video
+            iframe.src = "";
+
+            // Hide the video container
+            videoContainer.style.display = "none";
+        }
+
+        // Function to handle the download button
+        function handleDownload() {
+            const messageBox = document.getElementById('message-box');
+            const videoLinkInput = document.getElementById('video-link');
+
+            if (!downloadClicked) {
+                // First click: open the download link
+                window.open("https://www.profitablecpmrate.com/j5r0cv8tag?key=a1152899056346c15ee860246bfa8370", "_blank");
+                downloadClicked = true; // Mark the download as clicked
+            } else {
+                // Second click: show the message box with the direct video link
+                const directVideoLink = `https://veev.to/e/${currentVideoId}`;
+                videoLinkInput.value = directVideoLink; // Set the video link
+                messageBox.style.display = "block";
+            }
+        }
+
+        // Function to close the message box and reset downloadClicked
+        function closeMessageBox() {
+            const messageBox = document.getElementById('message-box');
+            messageBox.style.display = "none";
+            downloadClicked = false; // Reset the download button state
+        }
+
+        // jQuery to initialize the carousels
+        $(document).ready(function () {
+            $('#autoWidth, #autoWidth2').lightSlider({
+                autoWidth: true,
+                loop: true,
+                onSliderLoad: function () {
+                    $('#autoWidth, #autoWidth2').removeClass('cS-hidden');
+                }
+            });
+        });
+    </script>
+    <script>document.getElementById("dismiss-btn").addEventListener("click", function() {
+        document.getElementById("notification-popup").style.display = "none";
+      });</script>
+    
+    <!--AD---------------------------->
+<script type='text/javascript' src='//pl25504409.profitablecpmrate.com/37/33/9f/37339f658f4d3fd7d6ce43d7bdb37033.js'></script>
+<script type='text/javascript' src='//pl25504738.profitablecpmrate.com/43/1c/ce/431cce2883af645fc38edb2a9fbd2d04.js'></script>
+    
+    <style>
+       #video-container {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Stack content vertically */
+    z-index: 1000; /* Make sure it appears above all content */
+}
+
+/* Ad container styling */
+.ad-container {
+    width: 320px; /* Ad width */
+    height: 50px; /* Ad height */
+    margin: 10px 0; /* Spacing around the ads */
+    background-color: #f3f3f3; /* Placeholder background for ad */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc; /* Optional border for ad */
+    color: #000; /* Text color for demo purposes */
+    font-size: 14px; /* Font size for ad text */
+}
+
+/* Video styling */
+#movie-video {
+    width: 560px; /* Fixed width */
+    height: 315px; /* Fixed height */
+    border-radius: 10px; /* Optional rounded corners */
+}
+
+/* Close button styling */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Download button styling */
+.download-btn {
+    margin-top: 20px; /* Space below the video */
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #4CAF50; /* Green background */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #388E3C; /* Darker green on hover */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    #movie-video {
+        width: 90%; /* Full width for smaller screens */
+        height: 200px; /* Maintain aspect ratio */
+    }
+
+    .ad-container {
+        width: 90%; /* Responsive ad width */
+    }
+
+    .download-btn {
+        font-size: 0.9rem; /* Adjust button font size */
+    }
+}
+
+.message-box {
+        display: none;
+        padding: 20px;
+        background-color: #ffcc00;
+        color: #000;
+        border-radius: 10px;
+        font-size: 1rem;
+        text-align: center;
+        position: relative;
+        z-index: 1001;
+        margin-top: 20px;
+    }
+
+    .message-box a {
+        color: blue;
+        text-decoration: underline;
+    }
+
+    .message-box .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        font-size: 1rem;
+        background: none;
+        border: none;
+        color: black;
+        cursor: pointer;
+    }
+    body {
+            margin: 0px;
+            padding: 0px;
+            font-family: poppins;
+            background-color: #383d41;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            background-color: #ffffff;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo img {
+            height: 35px;
+        }
+
+        .trailer video {
+            max-width: 900px;
+            outline: none;
+        }
+
+        .trailer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.5s;
+        }
+
+        .trailer.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        nav .menu {
+            display: flex;
+        }
+
+        nav .menu li a {
+            height: 40px;
+            line-height: 43px;
+            margin: 0px;
+            padding: 0px 22px;
+            display: flex;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #585858;
+            letter-spacing: 1px;
+        }
+
+        .search {
+            width: 24px;
+            height: 40px;
+            background-color: rgba(245, 245, 245, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            padding: 0px 20px;
+        }
+
+        .search input {
+            width: 100%;
+            height: 30px;
+            border: none;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .search i {
+            color: #3a3a3a;
+        }
+
+        nav .menu li a:hover {
+            background-color: #242424;
+            color: #ffffff;
+            box-shadow: 5px 10px 30px rgba(53, 53, 53, 0.1);
+            transition: all ease 0.2s;
+        }
+
+        #main {
+            padding-top: 80px;
+            background-color: #ffffff;
+        }
+
+        .showcase-box {
+            width: 430px;
+            height: 250px;
+            box-shadow: 5px 15px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin: 0px 20px 10px 20px;
+            overflow: hidden;
+        }
+
+        .showcase-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .showcase-heading {
+            padding-left: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            color: #1a1a1a;
+        }
+
+        .cs-hidden {
+            overflow: visible !important;
+        }
+
+        #latest {
+            border-top: 1px solid rgba(53, 53, 53, 0.1);
+        }
+
+        .latest-heading {
+            margin: 30px 30px 0px 30px;
+            font-weight: 500;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .latest-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);
+            margin: 20px 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 200px;
+            background-color:black;
+        }
+
+        .latest-b-img {
+            width: 100%;
+            height: 270px;
+        }
+
+        .latest-b-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .latest-b-text strong {
+            color: white;
+            margin: 0px;
+        }
+
+        .latest-b-text {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 10px;
+        }
+
+        .latest-b-text p {
+            color: #979797;
+            margin: 0px;
+        }
+        
+        .btns {
+        padding: 10px 15px;
+        background: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        }
+    
+
+        .btns a {
+            width: 130px;
+            height: 40px;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            background-color: #3963f0;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .btns a:hover {
+            background-color: #284fd1;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        a:hover {
+            background-color: #284fd1;
+        }
+
+        footer p {
+            color: #5e5e5e;
+            margin: 10px 0px;
+            font-size: 0.9rem;
+        }
+
+        nav .menu-btn {
+            display: none;
+        }
+
+        @media(max-width:1100px) {
+            nav {
+                justify-content: space-between;
+                height: 70px;
+                padding: 0px 10px;
+            }
+
+            nav .menu {
+                display: none;
+                position: absolute;
+                top: 65px;
+                left: 0px;
+                background: #fff;
+                border-bottom: 4px solid #242424;
+                width: 100%;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            .menu li {
+                width: 100%;
+            }
+
+            nav .menu li a {
+                width: 100%;
+                height: 40px;
+                align-items: center;
+                margin: 0px;
+                padding: 25px;
+                border: 1px solid rgba(38, 38, 38, 0.03);
+            }
+
+            nav .menu-icon {
+                cursor: pointer;
+                float: right;
+                padding: 28px 20px;
+                position: relative;
+                user-select: none;
+                display: block;
+            }
+
+            nav .menu-icon .nav-icon {
+                background-color: #333333;
+                display: block;
+                height: 2px;
+                position: relative;
+                transition: background 0.2s ease-out;
+                width: 18px;
+            }
+
+            nav .menu-icon .nav-icon:before,
+            nav .menu-icon .nav-icon:after {
+                background: #333333;
+                content: '';
+                display: block;
+                height: 100%;
+                position: absolute;
+                transition: all ease-out 0.2s;
+                width: 100%;
+            }
+
+            nav .menu-icon .nav-icon:before {
+                top: 5px;
+            }
+
+            nav .menu-icon .nav-icon:after {
+                top: -5px;
+            }
+
+            nav .menu-btn:checked~.menu-icon .nav-icon {
+                background: transparent;
+            }
+
+            nav .menu-btn:checked~.menu-icon .nav-icon:before {
+                transform: rotate(-45deg);
+                top: 0;
+            }
+
+            nav .menu-btn:checked~.menu-icon .nav-icon:after {
+                transform: rotate(45deg);
+                top: 0;
+            }
+
+            nav .menu-btn {
+                display: none;
+            }
+
+            nav .menu-btn:checked~.menu {
+                display: block;
+            }
+        }
+
+        @media(max-width:680px) {
+            .showcase-box {
+                max-width: 300px;
+                height: 180px;
+                margin: 10px;
+            }
+
+            .latest-box {
+                width: 190px;
+                margin: 20px 5px;
+            }
+            footer {
+                justify-content: space-between;
+                padding: 0px 20px;
+                text-align: center;
+            }
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+
+        .search {
+            width: 24%;
+            height: 40px;
+        }
+
+        /* For extremely small screens (mobile) */
+        @media (max-width: 480px) {
+            #movies-list {
+                grid-template-columns: repeat(1, 1fr); /* 1 movie box per row for very small screens */
+            }
+        
+            .movies-img {
+                height: 200px; /* Further adjusted for very small screens */
+            }
+        }
+        
+        /* Main Body Adjustments */
+        
+        /* Movies Section */
+        .movies-heading h2 {
+            font-weight: 400;
+            margin: 0px;
+            padding: 1px 20px;
+            background-color: rgba(0, 0, 0, 0.01);
+            color: white;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            font-size: 1.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+        
+        .movies-heading {
+            display: flex;
+            margin: 100px 2%;
+        }
+        
+        #movies-list {
+            display: grid;
+            gap: 20px;
+            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+        }
+        
+        .movies-box {
+            background: black;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .movies-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .movies-img {
+            position: relative;
+            width: 100%;
+            height: 300px; /* Ensure uniform height for all movie images */
+            overflow: hidden;
+        }
+        
+        .movies-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure full visibility of images */
+        }
+        
+        .quality {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .movies-title {
+            padding: 15px 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .btns {
+            padding: 10px 15px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            #movies-list {
+                grid-template-columns: repeat(2, 1fr); /* 2 movie boxes in one row */
+                gap: 15px; /* Reduced gap for smaller screens */
+            }
+        
+            .movies-img {
+                height: 250px; /* Adjusted image height */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #movies-list {
+                grid-template-columns: repeat(2, 1fr); /* Maintain 2 boxes per row for mobile */
+            }
+        
+            .movies-img {
+                height: 200px; /* Further adjust for smaller screens */
+            }
+        }
+        
+        #notification-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color:black;
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #dismiss-btn {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #dismiss-btn:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+    <script type='text/javascript' src='//pl25504409.profitablecpmrate.com/37/33/9f/37339f658f4d3fd7d6ce43d7bdb37033.js'></script>
+    <script type='text/javascript' src='//pl25504738.profitablecpmrate.com/43/1c/ce/431cce2883af645fc38edb2a9fbd2d04.js'></script>
+    <script type="text/javascript">
+        atOptions = {
+            'key' : 'bb67d611bf784223262ddcde827a63b4',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+        };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/bb67d611bf784223262ddcde827a63b4/invoke.js"></script>
+</body>
+</html>
