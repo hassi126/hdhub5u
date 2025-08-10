@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="rk4SjTWxq9LmchyxP1rmpOxBFEGS1xiMQglTiE63LA8" />
+        <meta name="google-site-verification" content="rk4SjTWxq9LmchyxP1rmpOxBFEGS1xiMQglTiE63LA8" />
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Hassi4uMovies - Latest HD Movies</title>
@@ -1035,6 +1036,48 @@
             background-color: var(--warning-color);
         }
 
+        /* Full Poster View */
+        .full-poster-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .full-poster-container {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .full-poster {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .full-poster-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .full-poster-close:hover {
+            color: var(--accent-color);
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -1295,6 +1338,14 @@
         </div>
     </div>
 
+    <!-- Full Poster View -->
+    <div class="full-poster-modal" id="fullPosterModal">
+        <div class="full-poster-container">
+            <span class="full-poster-close" onclick="closeFullPoster()">&times;</span>
+            <img src="" alt="Movie Poster" class="full-poster" id="fullPosterImg">
+        </div>
+    </div>
+
     <header>
         <a href="#" class="logo">
             <img src="haslogo.png" alt="Hassi4uMovies" class="logo-img">
@@ -1397,10 +1448,10 @@
                 <a href="#" class="footer-link">Home</a>
                 <a href="#" class="footer-link">Movies</a>
                 <a href="#" class="footer-link">TV Shows</a>
-                <a href="#" class="footer-link">About Us</a>
-                <a href="#" class="footer-link">Contact</a>
-                <a href="#" class="footer-link">DMCA</a>
-                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="javascript:void(0)" class="footer-link" onclick="showAboutUs()">About Us</a>
+                <a href="javascript:void(0)" class="footer-link" onclick="showContactUs()">Contact</a>
+                <a href="javascript:void(0)" class="footer-link" onclick="showDMCA()">DMCA</a>
+                <a href="javascript:void(0)" class="footer-link" onclick="showPrivacyPolicy()">Privacy Policy</a>
             </div>
             
             <div class="footer-social">
@@ -1574,6 +1625,8 @@
         const menuToggle = document.getElementById('menuToggle');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
+        const fullPosterModal = document.getElementById('fullPosterModal');
+        const fullPosterImg = document.getElementById('fullPosterImg');
 
         // Current movie for download modal
         let currentDownloadMovie = null;
@@ -1652,6 +1705,129 @@
             window.open('https://t.me/share/url?url=' + encodeURIComponent(window.location.href) + '&text=Check%20out%20this%20awesome%20movie%20site!', '_blank');
             showNotification('Shared on Telegram!');
         }
+
+        // Footer link functions
+        function showAboutUs() {
+            const aboutUsContent = `
+                <div class="popup-container">
+                    <span class="popup-close" onclick="closePopup()">&times;</span>
+                    <h2 class="popup-title">About Hassi4uMovies</h2>
+                    <p class="popup-text">
+                        Hassi4uMovies is a premier online platform for streaming and downloading the latest movies in high quality. 
+                        We provide a vast collection of movies from Bollywood, Hollywood, and regional cinema.
+                    </p>
+                    <p class="popup-text">
+                        Our mission is to provide free access to entertainment for everyone. We regularly update our collection with 
+                        the newest releases and classic favorites.
+                    </p>
+                    <p class="popup-text">
+                        Note: We don't host any files directly on our server. All content is provided by third-party sources.
+                    </p>
+                </div>
+            `;
+            
+            popupOverlay.innerHTML = aboutUsContent;
+            popupOverlay.style.display = 'flex';
+        }
+
+        function showContactUs() {
+            const contactUsContent = `
+                <div class="popup-container">
+                    <span class="popup-close" onclick="closePopup()">&times;</span>
+                    <h2 class="popup-title">Contact Us</h2>
+                    <p class="popup-text">
+                        Have questions, suggestions, or feedback? We'd love to hear from you!
+                    </p>
+                    <div style="text-align: left; margin: 20px 0;">
+                        <p><i class="fas fa-envelope"></i> Email: support@hassi4umovies.com</p>
+                        <p><i class="fas fa-phone"></i> Phone: +91 9876543210</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Address: 123 Movie Street, Mumbai, India</p>
+                    </div>
+                    <p class="popup-text">
+                        For DMCA or copyright issues, please use the DMCA link in the footer.
+                    </p>
+                </div>
+            `;
+            
+            popupOverlay.innerHTML = contactUsContent;
+            popupOverlay.style.display = 'flex';
+        }
+
+        function showDMCA() {
+            const dmcaContent = `
+                <div class="popup-container">
+                    <span class="popup-close" onclick="closePopup()">&times;</span>
+                    <h2 class="popup-title">DMCA Policy</h2>
+                    <p class="popup-text">
+                        Hassi4uMovies respects the intellectual property rights of others and expects its users to do the same.
+                    </p>
+                    <div style="text-align: left; margin: 20px 0;">
+                        <p>If you believe that your copyrighted work has been copied in a way that constitutes copyright infringement, please provide our copyright agent with the following information:</p>
+                        <ol>
+                            <li>A physical or electronic signature of the copyright owner</li>
+                            <li>Identification of the copyrighted work claimed to have been infringed</li>
+                            <li>Identification of the material that is claimed to be infringing</li>
+                            <li>Your contact information</li>
+                            <li>A statement that you have a good faith belief that use of the material is not authorized</li>
+                            <li>A statement that the information in the notification is accurate</li>
+                        </ol>
+                        <p>Please send your DMCA notice to: dmca@hassi4umovies.com</p>
+                    </div>
+                </div>
+            `;
+            
+            popupOverlay.innerHTML = dmcaContent;
+            popupOverlay.style.display = 'flex';
+        }
+
+        function showPrivacyPolicy() {
+            const privacyContent = `
+                <div class="popup-container">
+                    <span class="popup-close" onclick="closePopup()">&times;</span>
+                    <h2 class="popup-title">Privacy Policy</h2>
+                    <div style="text-align: left; margin: 20px 0;">
+                        <h3>Information We Collect</h3>
+                        <p>We may collect personal information such as your IP address, browser type, and pages visited for analytics purposes.</p>
+                        
+                        <h3>How We Use Information</h3>
+                        <p>We use collected information to improve our services, analyze site usage, and customize content.</p>
+                        
+                        <h3>Cookies</h3>
+                        <p>We use cookies to enhance user experience. You can disable cookies in your browser settings.</p>
+                        
+                        <h3>Third-Party Links</h3>
+                        <p>Our site may contain links to third-party websites. We are not responsible for their privacy practices.</p>
+                        
+                        <h3>Changes to This Policy</h3>
+                        <p>We may update this policy periodically. Continued use of the site constitutes acceptance of changes.</p>
+                    </div>
+                </div>
+            `;
+            
+            popupOverlay.innerHTML = privacyContent;
+            popupOverlay.style.display = 'flex';
+        }
+
+        // Full poster view functions
+        function openFullPoster() {
+            if (currentDownloadMovie) {
+                fullPosterImg.src = currentDownloadMovie.image;
+                fullPosterModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeFullPoster() {
+            fullPosterModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close full poster when clicking outside
+        fullPosterModal.addEventListener('click', function(e) {
+            if (e.target === fullPosterModal) {
+                closeFullPoster();
+            }
+        });
 
         // Render Hero Slider - HDHub4u Style
         function renderHeroSlider() {
@@ -1916,13 +2092,6 @@
             clearInterval(slideInterval); // Pause slider when modal is open
         }
 
-        // Open full poster in new tab
-        function openFullPoster() {
-            if (currentDownloadMovie) {
-                window.open(currentDownloadMovie.image, '_blank');
-            }
-        }
-
         // Close download modal
         function closeDownloadModal() {
             downloadModal.style.display = 'none';
@@ -1959,7 +2128,9 @@
                 movie.title.toLowerCase().includes(query) || 
                 movie.genre.toLowerCase().includes(query) ||
                 movie.industry.toLowerCase().includes(query) ||
-                movie.language.toLowerCase().includes(query)
+                movie.language.toLowerCase().includes(query) ||
+                movie.year.includes(query) ||
+                movie.description.toLowerCase().includes(query)
             );
             
             // Clear all containers
