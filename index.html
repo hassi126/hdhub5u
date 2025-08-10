@@ -2,13 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lightslider/dist/js/lightslider.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider/dist/css/lightslider.min.css">
-    <title>hassi4umovies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Hassi4uMovies - Latest HD Movies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #0f1923;
+            --secondary-color: #00acc1;
+            --accent-color: #ff5722;
+            --dark-color: #0a121a;
+            --light-color: #f5f5f5;
+            --text-color: #ffffff;
+            --text-secondary: #b0bec5;
+            --card-bg: #1a2a3a;
+            --rating-color: #ffc107;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,1267 +32,1921 @@
         }
 
         body {
-            background-color: #0b3d0b;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 576px) {
+            .container {
+                max-width: 540px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: #111;
+        }
+
+        .btn-primary:hover {
+            background-color: #0097a7;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
             color: white;
+        }
+
+        .btn-accent:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--secondary-color);
+            color: #111;
+        }
+
+        .text-center {
             text-align: center;
         }
 
-        /* Gradient Header */
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        .mt-5 { margin-top: 3rem; }
+
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mb-5 { margin-bottom: 3rem; }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--secondary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-container {
+            background-color: var(--dark-color);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        .popup-logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .popup-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+
+        .popup-text {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .facebook {
+            background-color: #3b5998;
+        }
+
+        .twitter {
+            background-color: #1da1f2;
+        }
+
+        .whatsapp {
+            background-color: #25d366;
+        }
+
+        .telegram {
+            background-color: #0088cc;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .popup-close:hover {
+            color: var(--accent-color);
+        }
+
+        /* Header Styles */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: linear-gradient(90deg, #004d00, #008000);
+            padding: 15px 5%;
+            background-color: var(--dark-color);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffcc00;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
         }
 
         .search-box {
             display: flex;
-            gap: 5px;
+            align-items: center;
+            gap: 10px;
+            width: 40%;
+            position: relative;
         }
 
         .search-box input {
-            padding: 8px;
+            padding: 10px 15px;
             border: none;
-            border-radius: 5px;
-            width: 200px;
-            transition: 0.3s;
+            border-radius: 30px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--secondary-color);
         }
 
         .search-box button {
-            padding: 8px 12px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
-            background-color: #ffcc00;
+            border-radius: 30px;
+            background-color: var(--secondary-color);
+            color: #111;
             cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
+            font-weight: 600;
+            transition: var(--transition);
         }
 
         .search-box button:hover {
-            background-color: #ffdb4d;
+            background-color: #0097a7;
         }
 
-        /* Mobile View */
-        .menu-button, .search-icon {
+        .menu-toggle {
             display: none;
-            font-size: 24px;
             background: none;
             border: none;
-            color: white;
+            color: var(--text-color);
+            font-size: 1.5rem;
             cursor: pointer;
         }
 
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            header {
-                justify-content: space-between;
-                padding: 10px;
-            }
-
-            .menu-button {
-                display: block;
-            }
-
-            .logo {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .search-box {
-                display: none;
-            }
-
-            .search-icon {
-                display: block;
-                font-size: 22px;
-            }
+        /* Hero Slider - HDHub4u Style */
+        .hero-slider {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            margin: 20px auto;
+            overflow: hidden;
+            max-width: 95%;
+            border-radius: 10px;
         }
 
-        /* Dropdown Menu */
-        .menu {
-            display: none;
-            background-color: #004d00;
-            padding: 10px;
+        .slider-container {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+            width: 100%;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             position: absolute;
-            left: 10px;
-            top: 50px;
-            width: 170px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: -1;
         }
 
-        .menu a {
-            display: block;
+        .slide-content {
+            padding: 40px;
+            max-width: 600px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .watch-btn {
+            background-color: var(--secondary-color);
+            color: #111;
+        }
+
+        .download-btn {
+            background-color: var(--accent-color);
             color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-bottom: 1px solid #008000;
-            font-size: 16px;
-            transition: 0.3s;
         }
 
-        .menu a:hover {
-            background-color: #008000;
-        }
-
-        /* Search Bar for Mobile */
-        .mobile-search-box {
-            display: none;
+        .slider-nav {
             position: absolute;
-            top: 50px;
-            right: 10px;
-            background-color: #004d00;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
         }
 
-        .mobile-search-box input {
-            padding: 7px;
-            width: 170px;
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .slider-dot.active {
+            background-color: var(--secondary-color);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .slider-arrow:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-arrow.left {
+            left: 20px;
+        }
+
+        .slider-arrow.right {
+            right: 20px;
+        }
+
+        /* Video Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+            aspect-ratio: 16/9;
+        }
+
+        /* Download Modal */
+        .download-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .download-container {
+            background-color: var(--dark-color);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        .download-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .download-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-right: 20px;
+        }
+
+        .download-close {
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            transition: color 0.3s;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .download-close:hover {
+            color: var(--accent-color);
+        }
+
+        .download-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .download-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .download-meta-item i {
+            color: var(--secondary-color);
+        }
+
+        .download-poster-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .download-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .download-poster-container:hover .download-poster {
+            transform: scale(1.05);
+        }
+
+        .download-screenshots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .screenshot {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.05);
+        }
+
+        .download-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .download-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .download-link {
+            display: block;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            color: #111;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .download-link:hover {
+            background-color: #00bcd4;
+            transform: translateY(-3px);
+        }
+
+        .download-link i {
+            font-size: 1.1rem;
+        }
+
+        /* Movies Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .movie-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-poster {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.05);
+        }
+
+        .movie-badges {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .quality-badge {
+            background-color: rgba(0,0,0,0.7);
+            color: var(--secondary-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .new-badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .movie-rating {
+            color: var(--rating-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
             border: none;
             border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: transform 0.3s;
         }
 
-        /* Category Buttons */
-        .category-container {
+        .action-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .watch-btn {
+            background-color: var(--secondary-color);
+            color: #111;
+        }
+
+        .download-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        .view-all {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-all:hover {
+            color: var(--accent-color);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: var(--dark-color);
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--secondary-color);
+            cursor: pointer;
+            flex-grow: 1;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: var(--dark-color);
+            color: var(--text-color);
+            border: 1px solid var(--secondary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+        }
+
+        .filter-apply-btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .filter-apply-btn:hover {
+            background-color: #e64a19;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo-img {
+            height: 40px;
+        }
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .footer-links {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
-            margin: 20px;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
-        .category {
-            background: linear-gradient(90deg, #008000, #00b300);
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--secondary-color);
+            color: #111;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            background-color: var(--success-color);
             color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
-        .category:hover {
-            background: linear-gradient(90deg, #00b300, #008000);
-            transform: scale(1.1);
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
-        /* Info Box */
-        .info-box {
-            background-color: #004d00;
-            padding: 15px;
-            margin: 20px auto;
-            width: 80%;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            font-size: 16px;
-            font-weight: bold;
+        .notification.error {
+            background-color: var(--error-color);
         }
-        .logo4{
-            height: 50px;
-            width: auto;
+
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .hero-slider {
+                height: 60vh;
+            }
+            
+            .hero-title {
+                font-size: 2.4rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .search-box {
+                width: 50%;
+            }
+            
+            .hero-slider {
+                height: 55vh;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .video-container iframe {
+                height: 450px;
+            }
+            
+            .download-container {
+                padding: 20px;
+            }
+            
+            .download-poster-container {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .logo {
+                order: 1;
+            }
+            
+            .menu-toggle {
+                display: block;
+                order: 2;
+            }
+            
+            .search-box {
+                order: 3;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .hero-slider {
+                height: 50vh;
+                min-height: 400px;
+                margin: 10px auto;
+            }
+            
+            .slide-content {
+                padding: 20px;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-meta span {
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+                gap: 15px;
+            }
+
+            .video-container iframe {
+                height: 350px;
+            }
+
+            .download-screenshots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-label {
+                margin-bottom: 5px;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-slider {
+                height: 45vh;
+                min-height: 350px;
+            }
+            
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .hero-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+
+            .movie-poster {
+                height: 220px;
+            }
+
+            .movie-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+            
+            .video-container iframe {
+                height: 250px;
+            }
+            
+            .download-screenshots {
+                grid-template-columns: 1fr;
+            }
+            
+            .screenshot {
+                height: 150px;
+            }
+
+            .popup-container {
+                padding: 20px;
+            }
+
+            .popup-title {
+                font-size: 1.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero-slider {
+                height: 40vh;
+                min-height: 300px;
+            }
+            
+            .hero-title {
+                font-size: 1.3rem;
+            }
+            
+            .hero-meta {
+                gap: 8px;
+            }
+            
+            .hero-meta span {
+                font-size: 0.8rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .movie-poster {
+                height: 180px;
+            }
+            
+            .video-container iframe {
+                height: 200px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- MainFile -->
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Movie added to favorites</span>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-container">
+            <span class="popup-close" onclick="closePopup()">&times;</span>
+            <img src="haslogo.png" alt="Hassi4uMovies" class="popup-logo">
+            <h2 class="popup-title">Welcome to Hassi4uMovies</h2>
+            <p class="popup-text">Get the latest HD movies for free. Share with your friends and enjoy unlimited entertainment!</p>
+            
+            <div class="share-buttons">
+                <div class="share-btn facebook" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="share-btn twitter" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                </div>
+                <div class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="share-btn telegram" onclick="shareOnTelegram()">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+            </div>
+            
+            <button class="btn btn-accent" onclick="closePopup()">Dismiss</button>
+        </div>
+    </div>
 
     <header>
-        <button class="menu-button" onclick="toggleMenu()">☰</button>
-        <!-- Main File -->
-        <a href="index.html">
-        <img src="haslogo.png" class="logo4">
-    </a>
+        <a href="#" class="logo">
+            <img src="haslogo.png" alt="Hassi4uMovies" class="logo-img">
+            <div class="logo-text">Hassi4uMovies</div>
+        </a>
+        
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
         <div class="search-box">
-            <input type="text" placeholder="Search...">
-            <button>🔍</button>
+            <input type="text" id="search-input" placeholder="Search movies...">
+            <button id="search-btn"><i class="fas fa-search"></i> Search</button>
         </div>
-        <button class="search-icon" onclick="toggleSearch()">🔍</button>
-        <div class="mobile-search-box" id="mobileSearchBox">
-        <input type="text" placeholder="Search...">
-    </div>
-    <div class="menu" id="dropdownMenu">
-        <a href="https://hassi4umovies.netlify.app/">Home</a>
-        <a href="#">Categories</a>
-        <a href="#">Latest Movies</a>
-        <a href="#">Contact Us</a>
-    </div>
     </header>
 
-    <!-- Mobile Dropdown Menu -->
-    
+    <main class="container">
+        <!-- Hero Slider - HDHub4u Style -->
+        <section class="hero-slider">
+            <div class="slider-container" id="sliderContainer"></div>
+            <button class="slider-arrow left" onclick="prevSlide()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="slider-arrow right" onclick="nextSlide()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="slider-nav" id="sliderNav"></div>
+        </section>
 
-    <!-- Mobile Search Box -->
-    
-    
-    <main>
-        <div class="category-container"> 
-            <button class="category" onclick="window.location.href='https://hassi4umovies.netlify.app/'">Home</button>
-            <button class="category" onclick="showMessage()">Bollywood Movies</button>
-            <button class="category" onclick="showMessage()">Hollywood Movies</button>
-            <button class="category" onclick="showMessage()">Punjabi Movies</button>
-            <button class="category" onclick="showMessage()">Pakistani Movies</button>
-            <button class="category" onclick="showMessage()">Animation Movies</button>
-            <button class="category" onclick="showMessage()">Hindi Dubbed Movies</button>
-            <button class="category" onclick="showMessage()">Web Series</button>
-            <button class="category" onclick="showMessage()">Kannada Movies</button>
-            <button class="category" onclick="showMessage()">Malayalam Movies</button>
-            <button class="category" onclick="showMessage()">Marathi Movies</button>
-            <button class="category" onclick="showMessage()">Punjabi Movies</button>
-            <button class="category" onclick="showMessage()">South Movies</button>
-            <button class="category" onclick="showMessage()">Tagalog Movies</button>
-            <button class="category" onclick="showMessage()">Tamil Movies</button>
-            <button class="category" onclick="showMessage()">Telugu Movies</button>
+        <!-- Filter Section -->
+        <div class="filter-section" id="filterSection">
+            <div class="filter-group">
+                <span class="filter-label">Industry:</span>
+                <select class="filter-select" id="industryFilter">
+                    <option value="all">All Industries</option>
+                    <option value="bollywood">Bollywood</option>
+                    <option value="hollywood">Hollywood</option>
+                    <option value="punjabi">Punjabi</option>
+                    <option value="south">South Indian</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Year:</span>
+                <select class="filter-select" id="yearFilter">
+                    <option value="all">All Years</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Language:</span>
+                <select class="filter-select" id="languageFilter">
+                    <option value="all">All Languages</option>
+                    <option value="hindi">Hindi</option>
+                    <option value="english">English</option>
+                    <option value="punjabi">Punjabi</option>
+                    <option value="tamil">Tamil</option>
+                    <option value="telugu">Telugu</option>
+                </select>
+            </div>
+            
+            <button class="filter-apply-btn" id="filterApplyBtn">Apply Filters</button>
         </div>
-        
-        <script>
-            function showMessage() {
-                alert("Movies Uploaded By Categories Soon");
-            }
-        </script>
-        
-        
-        <div class="info-box">
-            hassi4u, hassi4u Movies, Dual Audio Movies In 480p Movies, 720p Movies, 300mb Movies, Hindi Dubbed Series Download at hassi4umovies.
+
+        <!-- Latest Movies Section -->
+        <div class="section-header">
+            <h2 class="section-title">Latest Uploads</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
         </div>
+        <div class="movies-grid" id="latest-movies-container"></div>
+
+        <!-- Popular Movies Section -->
+        <div class="section-header">
+            <h2 class="section-title">Popular Movies</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="movies-grid" id="popular-movies-container"></div>
+
+        <!-- Top Rated Movies Section -->
+        <div class="section-header">
+            <h2 class="section-title">Top Rated</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="movies-grid" id="top-rated-container"></div>
     </main>
-    <style>
-        .h23{
-            color: red;
-            font-size: 20px;
-        }
-    </style>
-            <div id="notification-popup">
-                <p>Old and New Movies will be Uploaded Soon!
-                    Save This Website Address.
-                    <h class="h23">
-                    Share This Web Addres To Your Friends&Family.
-                </h>
-                </p>
-                <button id="dismiss-btn">Dismiss</button>
-              </div>
-    <script>
-        function toggleMenu() {
-            var menu = document.getElementById("dropdownMenu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
 
-        function toggleSearch() {
-            var searchBox = document.getElementById("mobileSearchBox");
-            searchBox.style.display = searchBox.style.display === "block" ? "none" : "block";
-        }
-    </script>
-<div id="home" class="content active">
-    <!-- Latest Movies Section -->
-    <section id="latest">
-        <h2 class="latest-heading"><strong>Latest Movies</strong></h2>
-        <ul id="autoWidth2" class="cs-hidden">
-            <li class="item-a">
-                <div class="latest-box">
-                    <div class="latest-b-img">
-                        <img src="https://myimg.click/images/2025/02/08/Thandel-2025.jpg">
-                    </div>
-                    <div class="latest-b-text">
-                        <strong>Thandel 2025 WEBRip Hindi Dual Audio Full Movie Watch and Download 1080p 720p 480p</strong>
-                        <p> Action</p>
-                        <div>
-                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                        </div>
-                    </div>
-                </div>
-                <li class="item-a">
-                    <div class="latest-box">
-                        <div class="latest-b-img">
-                            <img src="https://myimg.click/images/2025/02/08/Vidaamuyarchi-2025.png">
-                        </div>
-                        <div class="latest-b-text">
-                            <strong>Vidaamuyarchi 2025 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                            <p> Action</p>
-                            <div>
-                                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                            </div>
-                        </div>
-                    </div>
-                    <li class="item-a">
-                        <div class="latest-box">
-                            <div class="latest-b-img">
-                                <img src="https://myimg.click/images/2025/02/09/Panjab-Files-2024.jpg">
-                            </div>
-                            <div class="latest-b-text">
-                                <strong>Punjab Files 2024 WEBRip Punjabi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                                <p>History</p>
-                                <div>
-                                    <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                                </div>
-                            </div>
-                        </div>
-            <li class="item-a">
-                <div class="latest-box">
-                    <div class="latest-b-img">
-                        <img src="https://myimg.click/images/2025/01/12/Sookshmadarshini-2024.jpg">
-                    </div>
-                    <div class="latest-b-text">
-                        <strong>Sookshma_Darshini 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                        <p> Story</p>
-                        <div>
-                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                        </div>
-                    </div>
-                </div>
-                <li class="item-a">
-                    <div class="latest-box">
-                        <div class="latest-b-img">
-                            <img src="https://myimg.click/images/2025/02/05/oie_57271KK0DCXMB.jpg">
-                        </div>
-                        <div class="latest-b-text">
-                            <strong>Baby_John 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                            <p>Action</p>
-                            <div>
-                                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                            </div>
-                        </div>
-                    </div>
-                    <li class="item-a">
-                        <div class="latest-box">
-                            <div class="latest-b-img">
-                                <img src="https://myimg.click/images/2024/11/29/Sikandar-Ka-Muqaddar-2024.jpg">
-                            </div>
-                            <div class="latest-b-text">
-                                <strong>Sikandar_ka_Muqaddar 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                                <p> Story</p>
-                                <div>
-                                    <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                                </div>
-                            </div>
-                        </div>
-                        <li class="item-a">
-                            <div class="latest-box">
-                                <div class="latest-b-img">
-                                    <img src="https://myimg.click/images/2025/01/11/Bachhala-Malli-2024.jpg">
-                                </div>
-                                <div class="latest-b-text">
-                                    <strong>Bachhala_Malli 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                                    <p>Action</p>
-                                    <div>
-                                        <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <li class="item-a">
-                                <div class="latest-box">
-                                    <div class="latest-b-img">
-                                        <img src="https://myimg.click/images/2025/01/14/Sorgavaasal-2024.jpg">
-                                    </div>
-                                    <div class="latest-b-text">
-                                        <strong>Sorgavaasal 2024 WEBRip Hindi Dual Audio Full Movie Download 1080p 720p 480p</strong>
-                                        <p> Story</p>
-                                        <div>
-                                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                                        </div>
-                                    </div>
-                                </div>
-            <li class="item-a">
-                <div class="latest-box">
-                    <div class="latest-b-img">
-                        <img src="https://myimg.click/images/2025/01/31/Tabaah-2024.jpg">
-                    </div>
-                    <div class="latest-b-text">
-                        <strong>Tabbah 2024 WEBRip Punjabi Dual Audio Full Movie Watch And Download 1080p 720p 480p</strong>
-                        <p>Love Story</p>
-                        <div>
-                            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                        </div>
-                    </div>
-                </div>
-                <li class="item-a">
-                    <div class="latest-box">
-                        <div class="latest-b-img">
-                            <img src="https://myimg.click/images/2025/01/16/Bapu-Ni-Manda.jpg">
-                        </div>
-                        <div class="latest-b-text">
-                            <strong>Bapu Ni Manda Mera 2024 WEBRip Punjabi Dual Audio Full Movie Watch And Download 720p</strong>
-                            <p>Comedy</p>
-                            <div>
-                                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-                            </div>
-                        </div>
-                    </div>
-            </li>
-            <!-- More movie items here -->
-        </ul>
-    </section>
-                <!--AD---------------------------->
-                <script async="async" data-cfasync="false" src="//pl25504611.profitablecpmrate.com/527d859c57aab2a2738456bdaa84463d/invoke.js"></script>
-<div id="container-527d859c57aab2a2738456bdaa84463d"></div>
-<!--movies---------------------------->
-<div class="movies-heading">
-    <h2><strong>All Movies</strong></h2>
-</div>
-<section id="movies-list">
-    <!--box-1------------------------>
-    
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://myimg.click/images/2025/01/31/Tabaah-2024.jpg">
-        </div>
-        <!--text--------->
-        <a>
-       <strong> Tabbah.2024.WEBRip.Punjabi Dual Audio Full Movie Watch&Download 720p </strong>           </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://myimg.click/images/2025/01/16/Bapu-Ni-Manda.jpg">
-        </div>
-        <!--text--------->
-        <a>
-            <strong>Bapu.Ni.Manda.Mera..2024.WEBRip.Punjabi Dual Audio Full Movie Watch&Download 720p</strong>
-
-            </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-   
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://myimg.click/images/2025/01/16/Bapu-Ni-Manda.jpg">
-        </div>
-        <!--text--------->
-        <a>
-           <strong> Karwan (2018) Full Movie[In Hindi] With English Subtitles | HDRip 1080p HD</strong>
-        </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-
-    <!--box-2------------------------>
-    
-    <!--box-3------------------------>
-    
-    <!--box-4------------------------>
-    
-    <!--box-5------------------------>
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://fzmovies.live/imdb_images/Kabhi%20Khushi%20Kabhie%20Gham....jpg">
-        </div>
-        <!--text--------->
-        <a>
-           <strong> Kabhi Khushi Kabhie Gham... (2001) Full Movie[In Hindi] With English Subtitles | HDRip 720 HD</strong>
-        </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-    <!--box-6------------------------>
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://fzmovies.live/imdb_images/Baazigar.1993.jpg">
-        </div>
-        <!--text--------->
-        <a>
-            <strong>Baazigar (1993)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong>
-        </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-    
-    <!--box-7------------------------>
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://fzmovies.live/imdb_images/Don.jpg">
-        </div>
-        <!--text--------->
-        <a>
-            <strong>Don (2006)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong>
-        </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-        <!--text--------->
-        <div class="movies-box">
-            <!--img------------>
-            <div class="movies-img">
-                <div class="quality">HDRip</div>
-                <img src="https://fzmovies.live/imdb_images/Dil%20Wale%20Dulhania%20Le%20Jayenge.jpg">
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="haslogo.png" alt="Hassi4uMovies" class="footer-logo-img">
+                <div class="footer-logo-text">Hassi4uMovies</div>
             </div>
-            <!--text--------->
-            <a>
-               <strong> Dilwale Dulhania Le Jayenge (1995)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong>
-            </a>
-            <div>
-                <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">Home</a>
+                <a href="#" class="footer-link">Movies</a>
+                <a href="#" class="footer-link">TV Shows</a>
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">DMCA</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
             </div>
+            
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+            </div>
+            
+            <p class="copyright">© 2023 Hassi4uMovies. All Rights Reserved.</p>
         </div>
-    <!--box-8------------------------>
-    <div class="movies-box">
-        <!--img------------>
-        <div class="movies-img">
-            <div class="quality">HDRip</div>
-            <img src="https://fzmovies.live/imdb_images/Dilwale_(2015).jpg">
-        </div>
-        <!--text--------->
-        <a>
-           <strong>Dilwale (2015)  Full Movie[In Hindi] With English Subtitles | HDRip 720p HD</strong> 
-        </a>
-        <div>
-            <button class="btns" onclick="showVideo('2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N')">Watch</button>
-        </div>
-    </div>
-</section>
-
+    </footer>
 
     <!-- Video Modal -->
-    <div id="video-container">
-        <iframe id="movie-video" width="100%" height="480" src="" scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
-        <button class="close-btn" onclick="closeVideo()">×</button>
-        <button class="download-btn" id="download-btn" onclick="handleDownload()">Download</button>
-        <div class="message-box" id="message-box">
-            <button class="close-btn" onclick="closeMessageBox()">×</button>
-            <p>Copy the video link:</p>
-            <input type="text" id="video-link" readonly style="width: 90%; text-align: center;">
-            <p>And visit this site: <a href="https://snapsave.cc/okru-video-downloader/" target="_blank">Video Downloader</a></p>
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <span class="close-modal" onclick="closeVideoModal()">&times;</span>
+            <iframe id="videoFrame" src="" allowfullscreen></iframe>
         </div>
     </div>
 
-    
+    <!-- Download Modal -->
+    <div class="download-modal" id="downloadModal">
+        <div class="download-container">
+            <div class="download-header">
+                <h3 class="download-title" id="downloadMovieTitle"></h3>
+                <span class="download-close" onclick="closeDownloadModal()">&times;</span>
+            </div>
+            
+            <div class="download-meta">
+                <span class="download-meta-item">
+                    <i class="fas fa-star"></i>
+                    <span id="downloadRating"></span>
+                </span>
+                <span class="download-meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="downloadYear"></span>
+                </span>
+                <span class="download-meta-item">
+                    <i class="fas fa-film"></i>
+                    <span id="downloadGenre"></span>
+                </span>
+                <span class="download-meta-item">
+                    <i class="fas fa-globe"></i>
+                    <span id="downloadLanguage"></span>
+                </span>
+            </div>
+            
+            <div class="download-poster-container" onclick="openFullPoster()">
+                <img src="" alt="Movie Poster" class="download-poster" id="downloadPoster">
+            </div>
+            
+            <h4>Screenshots:</h4>
+            <div class="download-screenshots" id="screenshotsContainer"></div>
+            
+            <div class="download-description" id="downloadDescription"></div>
+            
+            <h4>Download Links:</h4>
+            <div class="download-links" id="downloadLinksContainer"></div>
+        </div>
+    </div>
+
     <script>
-        // Function to display the video modal
-        let downloadClicked = false;
-        let currentVideoId = "";
-
-        // Function to show the video in modal
-        function showVideo(videoId) {
-            const videoContainer = document.getElementById('video-container');
-            const iframe = document.querySelector('#video-container iframe');
-
-            // Construct the Veev embed link dynamically
-            currentVideoId = videoId;
-            const videoEmbedLink = `https://veev.to/e/${videoId}`;
-            iframe.src = videoEmbedLink;
-
-            // Show the video container
-            videoContainer.style.display = "flex";
-            downloadClicked = false; // Reset the download button state
-            document.getElementById('message-box').style.display = "none"; // Hide message box if shown
-        }
-
-        // Function to close the video modal
-        function closeVideo() {
-            const iframe = document.querySelector('#video-container iframe');
-            const videoContainer = document.getElementById('video-container');
-
-            // Clear the iframe source to stop the video
-            iframe.src = "";
-
-            // Hide the video container
-            videoContainer.style.display = "none";
-        }
-
-        // Function to handle the download button
-        function handleDownload() {
-            const messageBox = document.getElementById('message-box');
-            const videoLinkInput = document.getElementById('video-link');
-
-            if (!downloadClicked) {
-                // First click: open the download link
-                window.open("https://www.profitablecpmrate.com/j5r0cv8tag?key=a1152899056346c15ee860246bfa8370", "_blank");
-                downloadClicked = true; // Mark the download as clicked
-            } else {
-                // Second click: show the message box with the direct video link
-                const directVideoLink = `https://veev.to/e/${currentVideoId}`;
-                videoLinkInput.value = directVideoLink; // Set the video link
-                messageBox.style.display = "block";
+        // Movie Data - Only 2 movies as requested
+        const movies = [
+            {
+                id: 1,
+                title: "Thandel (2025)",
+                image: "https://myimg.click/images/2025/02/08/Thandel-2025.jpg",
+                quality: "WEB-DL",
+                year: "2025",
+                rating: 8.5,
+                genre: "Action, Thriller",
+                industry: "bollywood",
+                language: "hindi",
+                videoId: "2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N",
+                downloadLink: "https://veev.to/d/2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N",
+                description: "Thandel is an upcoming Indian action thriller film featuring an ensemble cast. The movie follows the story of a special task force officer who goes undercover to infiltrate a dangerous drug cartel. As he gets deeper into the operation, he discovers a conspiracy that reaches the highest levels of power. With intense action sequences and a gripping storyline, Thandel promises to be an edge-of-the-seat thriller.",
+                screenshots: [
+                    "https://myimg.click/images/2025/02/08/Thandel-1.jpg",
+                    "https://myimg.click/images/2025/02/08/Thandel-2.jpg",
+                    "https://myimg.click/images/2025/02/08/Thandel-3.jpg"
+                ],
+                downloadLinks: [
+                    { quality: "480p", link: "https://veev.to/d/2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N" },
+                    { quality: "720p", link: "https://veev.to/d/2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N" },
+                    { quality: "1080p", link: "https://veev.to/d/2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N" },
+                    { quality: "4K", link: "https://veev.to/d/2HI1svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw26N" }
+                ],
+                isLatest: true,
+                isPopular: true,
+                isTopRated: true,
+                uploadDate: new Date("2023-08-25")
+            },
+            {
+                id: 2,
+                title: "Vidaamuyarchi (2025)",
+                image: "https://myimg.click/images/2025/02/08/Vidaamuyarchi-2025.png",
+                quality: "WEB-DL",
+                year: "2025",
+                rating: 7.8,
+                genre: "Action, Drama",
+                industry: "south",
+                language: "tamil",
+                videoId: "3AB2svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw37M",
+                downloadLink: "https://veev.to/d/3AB2svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw37M",
+                description: "Vidaamuyarchi is a Tamil action drama film starring popular actors in lead roles. The movie explores themes of friendship, betrayal, and redemption against the backdrop of a high-stakes political conspiracy. With breathtaking cinematography and powerful performances, Vidaamuyarchi is a must-watch for fans of South Indian cinema.",
+                screenshots: [
+                    "https://myimg.click/images/2025/02/08/Vidaamuyarchi-1.jpg",
+                    "https://myimg.click/images/2025/02/08/Vidaamuyarchi-2.jpg",
+                    "https://myimg.click/images/2025/02/08/Vidaamuyarchi-3.jpg"
+                ],
+                downloadLinks: [
+                    { quality: "480p", link: "https://veev.to/d/3AB2svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw37M" },
+                    { quality: "720p", link: "https://veev.to/d/3AB2svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw37M" },
+                    { quality: "1080p", link: "https://veev.to/d/3AB2svrMd8tWiOUvfCQNHg6fYbDZ1BqaDxEw37M" }
+                ],
+                isLatest: true,
+                isPopular: true,
+                isTopRated: false,
+                uploadDate: new Date("2023-08-24")
             }
-        }
+        ];
 
-        // Function to close the message box and reset downloadClicked
-        function closeMessageBox() {
-            const messageBox = document.getElementById('message-box');
-            messageBox.style.display = "none";
-            downloadClicked = false; // Reset the download button state
-        }
+        // DOM Elements
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const latestContainer = document.getElementById('latest-movies-container');
+        const popularContainer = document.getElementById('popular-movies-container');
+        const topRatedContainer = document.getElementById('top-rated-container');
+        const videoModal = document.getElementById('videoModal');
+        const videoFrame = document.getElementById('videoFrame');
+        const downloadModal = document.getElementById('downloadModal');
+        const sliderContainer = document.getElementById('sliderContainer');
+        const sliderNav = document.getElementById('sliderNav');
+        const industryFilter = document.getElementById('industryFilter');
+        const yearFilter = document.getElementById('yearFilter');
+        const languageFilter = document.getElementById('languageFilter');
+        const filterApplyBtn = document.getElementById('filterApplyBtn');
+        const filterSection = document.getElementById('filterSection');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const menuToggle = document.getElementById('menuToggle');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
 
-        // jQuery to initialize the carousels
-        $(document).ready(function () {
-            $('#autoWidth, #autoWidth2').lightSlider({
-                autoWidth: true,
-                loop: true,
-                onSliderLoad: function () {
-                    $('#autoWidth, #autoWidth2').removeClass('cS-hidden');
+        // Current movie for download modal
+        let currentDownloadMovie = null;
+        let currentSlide = 0;
+        let slideInterval;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show popup on page load
+            setTimeout(() => {
+                popupOverlay.style.display = 'flex';
+            }, 2000);
+
+            renderHeroSlider();
+            renderLatestMovies();
+            renderPopularMovies();
+            renderTopRatedMovies();
+            
+            // Search functionality
+            searchBtn.addEventListener('click', function() {
+                searchMovies();
+                // Show filter section when searching
+                filterSection.classList.add('active');
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchMovies();
+                    // Show filter section when searching
+                    filterSection.classList.add('active');
                 }
             });
+
+            // Filter functionality
+            filterApplyBtn.addEventListener('click', applyFilters);
+            
+            // Menu toggle
+            menuToggle.addEventListener('click', function() {
+                filterSection.classList.toggle('active');
+            });
         });
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            notification.className = 'notification';
+            notification.classList.add(type);
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Popup functions
+        function closePopup() {
+            popupOverlay.style.display = 'none';
+        }
+
+        function shareOnFacebook() {
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank');
+            showNotification('Shared on Facebook!');
+        }
+
+        function shareOnTwitter() {
+            window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=Check%20out%20this%20awesome%20movie%20site!', '_blank');
+            showNotification('Shared on Twitter!');
+        }
+
+        function shareOnWhatsApp() {
+            window.open('https://wa.me/?text=' + encodeURIComponent('Check out this awesome movie site: ' + window.location.href), '_blank');
+            showNotification('Shared on WhatsApp!');
+        }
+
+        function shareOnTelegram() {
+            window.open('https://t.me/share/url?url=' + encodeURIComponent(window.location.href) + '&text=Check%20out%20this%20awesome%20movie%20site!', '_blank');
+            showNotification('Shared on Telegram!');
+        }
+
+        // Render Hero Slider - HDHub4u Style
+        function renderHeroSlider() {
+            const featuredMovies = movies.filter(movie => movie.isPopular).slice(0, 5);
+            
+            featuredMovies.forEach((movie, index) => {
+                // Create slide
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.innerHTML = `
+                    <img src="${movie.image}" alt="${movie.title}" loading="lazy">
+                    <div class="slide-content">
+                        <h1 class="hero-title">${movie.title}</h1>
+                        <div class="hero-meta">
+                            <span>${movie.year}</span>
+                            <span class="movie-rating"><i class="fas fa-star"></i> ${movie.rating}</span>
+                            <span>${movie.genre.split(',')[0]}</span>
+                            <span>${movie.industry.charAt(0).toUpperCase() + movie.industry.slice(1)}</span>
+                        </div>
+                        <p style="margin-bottom: 20px;">${movie.description.substring(0, 150)}...</p>
+                        <div class="hero-btns">
+                            <button class="hero-btn watch-btn" onclick="showVideoModal('${movie.videoId}')">
+                                <i class="fas fa-play"></i> Watch Now
+                            </button>
+                            <button class="hero-btn download-btn" onclick="showDownloadModal(${movie.id})">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                `;
+                sliderContainer.appendChild(slide);
+                
+                // Create navigation dot
+                const dot = document.createElement('div');
+                dot.className = 'slider-dot';
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                sliderNav.appendChild(dot);
+            });
+            
+            // Start auto slide
+            startAutoSlide();
+        }
+
+        // Auto slide functionality
+        function startAutoSlide() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function nextSlide() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+        }
+
+        function prevSlide() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            
+            sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+            
+            // Reset auto slide timer
+            clearInterval(slideInterval);
+            startAutoSlide();
+        }
+
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            currentSlide = index;
+            sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+            
+            // Reset auto slide timer
+            clearInterval(slideInterval);
+            startAutoSlide();
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const industry = industryFilter.value;
+            const year = yearFilter.value;
+            const language = languageFilter.value;
+            
+            let filteredMovies = [...movies];
+            
+            if (industry !== 'all') {
+                filteredMovies = filteredMovies.filter(movie => movie.industry === industry);
+            }
+            
+            if (year !== 'all') {
+                filteredMovies = filteredMovies.filter(movie => movie.year === year);
+            }
+            
+            if (language !== 'all') {
+                filteredMovies = filteredMovies.filter(movie => movie.language === language);
+            }
+            
+            // Clear all containers
+            latestContainer.innerHTML = '';
+            popularContainer.innerHTML = '';
+            topRatedContainer.innerHTML = '';
+            
+            // Show filtered results in latest container
+            if (filteredMovies.length > 0) {
+                renderMovies(filteredMovies, latestContainer);
+                document.querySelector('.section-title').textContent = "Filtered Results";
+                showNotification(`Found ${filteredMovies.length} movies`, 'success');
+            } else {
+                latestContainer.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding: 20px;">No movies found matching your filters.</p>';
+                showNotification('No movies found with these filters', 'error');
+            }
+        }
+
+        // Render Latest Movies
+        function renderLatestMovies() {
+            const latestMovies = [...movies]
+                .filter(movie => movie.isLatest)
+                .sort((a, b) => b.uploadDate - a.uploadDate);
+            
+            renderMovies(latestMovies, latestContainer);
+        }
+
+        // Render Popular Movies
+        function renderPopularMovies() {
+            const popularMovies = movies.filter(movie => movie.isPopular);
+            renderMovies(popularMovies, popularContainer);
+        }
+
+        // Render Top Rated Movies
+        function renderTopRatedMovies() {
+            const topRatedMovies = [...movies]
+                .filter(movie => movie.isTopRated)
+                .sort((a, b) => b.rating - a.rating);
+            
+            renderMovies(topRatedMovies, topRatedContainer);
+        }
+
+        // Generic function to render movies
+        function renderMovies(movies, container) {
+            container.innerHTML = '';
+            
+            if (movies.length === 0) {
+                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding: 20px;">No movies found.</p>';
+                return;
+            }
+            
+            movies.forEach(movie => {
+                const movieCard = createMovieCard(movie);
+                container.appendChild(movieCard);
+            });
+        }
+
+        // Create movie card
+        function createMovieCard(movie) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.innerHTML = `
+                <div class="movie-poster">
+                    <img src="${movie.image}" alt="${movie.title}" loading="lazy">
+                    <div class="movie-badges">
+                        <span class="quality-badge">${movie.quality}</span>
+                        ${movie.isLatest ? '<span class="new-badge">NEW</span>' : ''}
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <div class="movie-meta">
+                        <span>${movie.year}</span>
+                        <span class="movie-rating">
+                            <i class="fas fa-star"></i> ${movie.rating}
+                        </span>
+                        <span>${movie.genre.split(',')[0]}</span>
+                    </div>
+                    <div class="movie-actions">
+                        <button class="action-btn watch-btn" onclick="showVideoModal('${movie.videoId}')">
+                            <i class="fas fa-play"></i> Watch
+                        </button>
+                        <button class="action-btn download-btn" onclick="showDownloadModal(${movie.id})">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Show video modal with embedded video
+        function showVideoModal(videoId) {
+            const embedUrl = `https://veev.to/e/${videoId}`;
+            videoFrame.src = embedUrl;
+            videoModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            clearInterval(slideInterval); // Pause slider when modal is open
+        }
+
+        // Close video modal
+        function closeVideoModal() {
+            videoFrame.src = '';
+            videoModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            startAutoSlide(); // Resume slider when modal is closed
+        }
+
+        // Show download modal
+        function showDownloadModal(movieId) {
+            const movie = movies.find(m => m.id === movieId);
+            if (!movie) return;
+            
+            currentDownloadMovie = movie;
+            
+            document.getElementById('downloadMovieTitle').textContent = movie.title;
+            document.getElementById('downloadPoster').src = movie.image;
+            document.getElementById('downloadDescription').textContent = movie.description;
+            document.getElementById('downloadRating').textContent = movie.rating;
+            document.getElementById('downloadYear').textContent = movie.year;
+            document.getElementById('downloadGenre').textContent = movie.genre.split(',')[0];
+            document.getElementById('downloadLanguage').textContent = movie.language.charAt(0).toUpperCase() + movie.language.slice(1);
+            
+            // Add screenshots
+            const screenshotsContainer = document.getElementById('screenshotsContainer');
+            screenshotsContainer.innerHTML = '';
+            movie.screenshots.forEach(screenshot => {
+                const img = document.createElement('img');
+                img.src = screenshot;
+                img.className = 'screenshot';
+                img.onclick = function() {
+                    window.open(screenshot, '_blank');
+                };
+                screenshotsContainer.appendChild(img);
+            });
+            
+            // Add download links
+            const downloadLinksContainer = document.getElementById('downloadLinksContainer');
+            downloadLinksContainer.innerHTML = '';
+            movie.downloadLinks.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.link;
+                a.className = 'download-link';
+                a.innerHTML = `<i class="fas fa-download"></i> Download ${link.quality}`;
+                a.target = '_blank';
+                downloadLinksContainer.appendChild(a);
+            });
+            
+            downloadModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            clearInterval(slideInterval); // Pause slider when modal is open
+        }
+
+        // Open full poster in new tab
+        function openFullPoster() {
+            if (currentDownloadMovie) {
+                window.open(currentDownloadMovie.image, '_blank');
+            }
+        }
+
+        // Close download modal
+        function closeDownloadModal() {
+            downloadModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentDownloadMovie = null;
+            startAutoSlide(); // Resume slider when modal is closed
+        }
+
+        // Close modals when clicking outside
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+
+        downloadModal.addEventListener('click', function(e) {
+            if (e.target === downloadModal) {
+                closeDownloadModal();
+            }
+        });
+
+        // Search movies
+        function searchMovies() {
+            const query = searchInput.value.toLowerCase().trim();
+            if (!query) {
+                renderLatestMovies();
+                renderPopularMovies();
+                renderTopRatedMovies();
+                filterSection.classList.remove('active');
+                return;
+            }
+            
+            const results = movies.filter(movie => 
+                movie.title.toLowerCase().includes(query) || 
+                movie.genre.toLowerCase().includes(query) ||
+                movie.industry.toLowerCase().includes(query) ||
+                movie.language.toLowerCase().includes(query)
+            );
+            
+            // Clear all containers
+            latestContainer.innerHTML = '';
+            popularContainer.innerHTML = '';
+            topRatedContainer.innerHTML = '';
+            
+            // Show search results in latest container
+            if (results.length > 0) {
+                renderMovies(results, latestContainer);
+                document.querySelector('.section-title').textContent = "Search Results";
+                showNotification(`Found ${results.length} movies for "${query}"`, 'success');
+            } else {
+                latestContainer.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding: 20px;">No movies found matching your search.</p>';
+                showNotification(`No results for "${query}"`, 'error');
+            }
+        }
     </script>
-    <script>document.getElementById("dismiss-btn").addEventListener("click", function() {
-        document.getElementById("notification-popup").style.display = "none";
-      });</script>
-    
-    <!--AD---------------------------->
-<script type='text/javascript' src='//pl25504409.profitablecpmrate.com/37/33/9f/37339f658f4d3fd7d6ce43d7bdb37033.js'></script>
-<script type='text/javascript' src='//pl25504738.profitablecpmrate.com/43/1c/ce/431cce2883af645fc38edb2a9fbd2d04.js'></script>
-    
-    <style>
-       #video-container {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    flex-direction: column; /* Stack content vertically */
-    z-index: 1000; /* Make sure it appears above all content */
-}
-
-/* Ad container styling */
-.ad-container {
-    width: 320px; /* Ad width */
-    height: 50px; /* Ad height */
-    margin: 10px 0; /* Spacing around the ads */
-    background-color: #f3f3f3; /* Placeholder background for ad */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ccc; /* Optional border for ad */
-    color: #000; /* Text color for demo purposes */
-    font-size: 14px; /* Font size for ad text */
-}
-
-/* Video styling */
-#movie-video {
-    width: 560px; /* Fixed width */
-    height: 315px; /* Fixed height */
-    border-radius: 10px; /* Optional rounded corners */
-}
-
-/* Close button styling */
-.close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 1.5rem;
-    color: #fff;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* Download button styling */
-.download-btn {
-    margin-top: 20px; /* Space below the video */
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #4CAF50; /* Green background */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.download-btn:hover {
-    background-color: #388E3C; /* Darker green on hover */
-}
-
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
-    #movie-video {
-        width: 90%; /* Full width for smaller screens */
-        height: 200px; /* Maintain aspect ratio */
-    }
-
-    .ad-container {
-        width: 90%; /* Responsive ad width */
-    }
-
-    .download-btn {
-        font-size: 0.9rem; /* Adjust button font size */
-    }
-}
-
-.message-box {
-        display: none;
-        padding: 20px;
-        background-color: #ffcc00;
-        color: #000;
-        border-radius: 10px;
-        font-size: 1rem;
-        text-align: center;
-        position: relative;
-        z-index: 1001;
-        margin-top: 20px;
-    }
-
-    .message-box a {
-        color: blue;
-        text-decoration: underline;
-    }
-
-    .message-box .close-btn {
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        font-size: 1rem;
-        background: none;
-        border: none;
-        color: black;
-        cursor: pointer;
-    }
-    body {
-            margin: 0px;
-            padding: 0px;
-            font-family: poppins;
-            background-color: #383d41;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            background-color: #ffffff;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo img {
-            height: 35px;
-        }
-
-        .trailer video {
-            max-width: 900px;
-            outline: none;
-        }
-
-        .trailer {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.5s;
-        }
-
-        .trailer.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        nav .menu {
-            display: flex;
-        }
-
-        nav .menu li a {
-            height: 40px;
-            line-height: 43px;
-            margin: 0px;
-            padding: 0px 22px;
-            display: flex;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 500;
-            color: #585858;
-            letter-spacing: 1px;
-        }
-
-        .search {
-            width: 24px;
-            height: 40px;
-            background-color: rgba(245, 245, 245, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-            padding: 0px 20px;
-        }
-
-        .search input {
-            width: 100%;
-            height: 30px;
-            border: none;
-            outline: none;
-            background-color: transparent;
-        }
-
-        .search i {
-            color: #3a3a3a;
-        }
-
-        nav .menu li a:hover {
-            background-color: #242424;
-            color: #ffffff;
-            box-shadow: 5px 10px 30px rgba(53, 53, 53, 0.1);
-            transition: all ease 0.2s;
-        }
-
-        #main {
-            padding-top: 80px;
-            background-color: #ffffff;
-        }
-
-        .showcase-box {
-            width: 430px;
-            height: 250px;
-            box-shadow: 5px 15px 30px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            margin: 0px 20px 10px 20px;
-            overflow: hidden;
-        }
-
-        .showcase-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top;
-        }
-
-        .showcase-heading {
-            padding-left: 30px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-size: 1.2rem;
-            color: #1a1a1a;
-        }
-
-        .cs-hidden {
-            overflow: visible !important;
-        }
-
-        #latest {
-            border-top: 1px solid rgba(53, 53, 53, 0.1);
-        }
-
-        .latest-heading {
-            margin: 30px 30px 0px 30px;
-            font-weight: 500;
-            font-size: 1.3rem;
-            color: white;
-        }
-
-        .latest-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);
-            margin: 20px 10px;
-            border-radius: 10px;
-            overflow: hidden;
-            width: 200px;
-            background-color:black;
-        }
-
-        .latest-b-img {
-            width: 100%;
-            height: 270px;
-        }
-
-        .latest-b-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .latest-b-text strong {
-            color: white;
-            margin: 0px;
-        }
-
-        .latest-b-text {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            margin: 10px;
-        }
-
-        .latest-b-text p {
-            color: #979797;
-            margin: 0px;
-        }
-        
-        .btns {
-        padding: 10px 15px;
-        background: #007bff;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 4px;
-        font-weight: bold;
-        }
-    
-
-        .btns a {
-            width: 130px;
-            height: 40px;
-            border: none;
-            outline: none;
-            color: #ffffff;
-            background-color: #3963f0;
-            margin: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1rem;
-        }
-
-        .btns a:hover {
-            background-color: #284fd1;
-        }
-
-        footer {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        a:hover {
-            background-color: #284fd1;
-        }
-
-        footer p {
-            color: #5e5e5e;
-            margin: 10px 0px;
-            font-size: 0.9rem;
-        }
-
-        nav .menu-btn {
-            display: none;
-        }
-
-        @media(max-width:1100px) {
-            nav {
-                justify-content: space-between;
-                height: 70px;
-                padding: 0px 10px;
-            }
-
-            nav .menu {
-                display: none;
-                position: absolute;
-                top: 65px;
-                left: 0px;
-                background: #fff;
-                border-bottom: 4px solid #242424;
-                width: 100%;
-                padding: 0px;
-                margin: 0px;
-            }
-
-            .menu li {
-                width: 100%;
-            }
-
-            nav .menu li a {
-                width: 100%;
-                height: 40px;
-                align-items: center;
-                margin: 0px;
-                padding: 25px;
-                border: 1px solid rgba(38, 38, 38, 0.03);
-            }
-
-            nav .menu-icon {
-                cursor: pointer;
-                float: right;
-                padding: 28px 20px;
-                position: relative;
-                user-select: none;
-                display: block;
-            }
-
-            nav .menu-icon .nav-icon {
-                background-color: #333333;
-                display: block;
-                height: 2px;
-                position: relative;
-                transition: background 0.2s ease-out;
-                width: 18px;
-            }
-
-            nav .menu-icon .nav-icon:before,
-            nav .menu-icon .nav-icon:after {
-                background: #333333;
-                content: '';
-                display: block;
-                height: 100%;
-                position: absolute;
-                transition: all ease-out 0.2s;
-                width: 100%;
-            }
-
-            nav .menu-icon .nav-icon:before {
-                top: 5px;
-            }
-
-            nav .menu-icon .nav-icon:after {
-                top: -5px;
-            }
-
-            nav .menu-btn:checked~.menu-icon .nav-icon {
-                background: transparent;
-            }
-
-            nav .menu-btn:checked~.menu-icon .nav-icon:before {
-                transform: rotate(-45deg);
-                top: 0;
-            }
-
-            nav .menu-btn:checked~.menu-icon .nav-icon:after {
-                transform: rotate(45deg);
-                top: 0;
-            }
-
-            nav .menu-btn {
-                display: none;
-            }
-
-            nav .menu-btn:checked~.menu {
-                display: block;
-            }
-        }
-
-        @media(max-width:680px) {
-            .showcase-box {
-                max-width: 300px;
-                height: 180px;
-                margin: 10px;
-            }
-
-            .latest-box {
-                width: 190px;
-                margin: 20px 5px;
-            }
-            footer {
-                justify-content: space-between;
-                padding: 0px 20px;
-                text-align: center;
-            }
-        }
-        
-        .logo img {
-            height: 50px;
-        }
-
-        .search {
-            width: 24%;
-            height: 40px;
-        }
-
-        /* For extremely small screens (mobile) */
-        @media (max-width: 480px) {
-            #movies-list {
-                grid-template-columns: repeat(1, 1fr); /* 1 movie box per row for very small screens */
-            }
-        
-            .movies-img {
-                height: 200px; /* Further adjusted for very small screens */
-            }
-        }
-        
-        /* Main Body Adjustments */
-        
-        /* Movies Section */
-        .movies-heading h2 {
-            font-weight: 400;
-            margin: 0px;
-            padding: 1px 20px;
-            background-color: rgba(0, 0, 0, 0.01);
-            color: white;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            font-size: 1.7rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            width: 100%;
-        }
-        
-        .movies-heading {
-            display: flex;
-            margin: 100px 2%;
-        }
-        
-        #movies-list {
-            display: grid;
-            gap: 20px;
-            padding: 20px;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
-        }
-        
-        .movies-box {
-            background: black;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .movies-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .movies-img {
-            position: relative;
-            width: 100%;
-            height: 300px; /* Ensure uniform height for all movie images */
-            overflow: hidden;
-        }
-        
-        .movies-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Ensure full visibility of images */
-        }
-        
-        .quality {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        
-        .movies-title {
-            padding: 15px 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .btns {
-            padding: 10px 15px;
-            background: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        
-        /* Mobile Responsive Adjustments */
-        @media (max-width: 768px) {
-            #movies-list {
-                grid-template-columns: repeat(2, 1fr); /* 2 movie boxes in one row */
-                gap: 15px; /* Reduced gap for smaller screens */
-            }
-        
-            .movies-img {
-                height: 250px; /* Adjusted image height */
-            }
-        }
-        
-        @media (max-width: 480px) {
-            #movies-list {
-                grid-template-columns: repeat(2, 1fr); /* Maintain 2 boxes per row for mobile */
-            }
-        
-            .movies-img {
-                height: 200px; /* Further adjust for smaller screens */
-            }
-        }
-        
-        #notification-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color:black;
-            border: 1px solid #ddd;
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        #dismiss-btn {
-            background-color: #4CAF50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #dismiss-btn:hover {
-            background-color: #3e8e41;
-        }
-    </style>
-    <script type='text/javascript' src='//pl25504409.profitablecpmrate.com/37/33/9f/37339f658f4d3fd7d6ce43d7bdb37033.js'></script>
-    <script type='text/javascript' src='//pl25504738.profitablecpmrate.com/43/1c/ce/431cce2883af645fc38edb2a9fbd2d04.js'></script>
-    <script type="text/javascript">
-        atOptions = {
-            'key' : 'bb67d611bf784223262ddcde827a63b4',
-            'format' : 'iframe',
-            'height' : 50,
-            'width' : 320,
-            'params' : {}
-        };
-    </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/bb67d611bf784223262ddcde827a63b4/invoke.js"></script>
 </body>
 </html>
