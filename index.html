@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta name="google-site-verification" content="rk4SjTWxq9LmchyxP1rmpOxBFEGS1xiMQglTiE63LA8" />
-
+    <meta name="google-site-verification" content="rk4SjTWxq9LmchyxP1rmpOxBFEGS1xiMQglTiE63LA8" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Hassi4uMovies - Latest HD Movies</title>
@@ -598,27 +597,22 @@
         .download-meta-item i {
             color: var(--secondary-color);
         }
+.download-poster-container {
+    width: 100%;
+    height: 100vh; /* full screen height */
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background-color: #000; /* black background for empty space */
+}
 
-        .download-poster-container {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
+.download-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* full image visible, no crop */
+    display: block;
+}
 
-        .download-poster {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .download-poster-container:hover .download-poster {
-            transform: scale(1.05);
-        }
 
         .download-screenshots {
             display: grid;
@@ -876,7 +870,7 @@
             min-width: 80px;
         }
 
-        .filter-select {
+        .filter-select, .filter-input {
             padding: 8px 15px;
             border-radius: 20px;
             background-color: var(--card-bg);
@@ -888,7 +882,11 @@
             transition: var(--transition);
         }
 
-        .filter-select:focus {
+        .filter-input {
+            cursor: text;
+        }
+
+        .filter-select:focus, .filter-input:focus {
             outline: none;
             border-color: var(--accent-color);
         }
@@ -1036,48 +1034,6 @@
             background-color: var(--warning-color);
         }
 
-        /* Full Poster View */
-        .full-poster-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 4000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .full-poster-container {
-            max-width: 90%;
-            max-height: 90vh;
-            position: relative;
-        }
-
-        .full-poster {
-            max-width: 100%;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
-        .full-poster-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .full-poster-close:hover {
-            color: var(--accent-color);
-        }
-
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -1133,7 +1089,7 @@
             }
             
             .download-poster-container {
-                height: 250px;
+                max-height: 400px;
             }
         }
 
@@ -1203,7 +1159,7 @@
                 margin-bottom: 5px;
             }
 
-            .filter-select {
+            .filter-select, .filter-input {
                 width: 100%;
             }
         }
@@ -1269,6 +1225,10 @@
             .footer-links {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .download-poster-container {
+                max-height: 300px;
             }
         }
 
@@ -1338,14 +1298,6 @@
         </div>
     </div>
 
-    <!-- Full Poster View -->
-    <div class="full-poster-modal" id="fullPosterModal">
-        <div class="full-poster-container">
-            <span class="full-poster-close" onclick="closeFullPoster()">&times;</span>
-            <img src="" alt="Movie Poster" class="full-poster" id="fullPosterImg">
-        </div>
-    </div>
-
     <header>
         <a href="#" class="logo">
             <img src="haslogo.png" alt="Hassi4uMovies" class="logo-img">
@@ -1377,6 +1329,10 @@
 
         <!-- Filter Section -->
         <div class="filter-section" id="filterSection">
+            <div class="filter-group">
+                <span class="filter-label">Title:</span>
+                <input type="text" class="filter-input" id="titleFilter" placeholder="Enter movie title...">
+            </div>
             <div class="filter-group">
                 <span class="filter-label">Industry:</span>
                 <select class="filter-select" id="industryFilter">
@@ -1500,7 +1456,7 @@
                 </span>
             </div>
             
-            <div class="download-poster-container" onclick="openFullPoster()">
+            <div class="download-poster-container">
                 <img src="" alt="Movie Poster" class="download-poster" id="downloadPoster">
             </div>
             
@@ -1515,7 +1471,7 @@
     </div>
 
     <script>
-        // Movie Data - Only 2 movies as requested
+        // Movie Data
         const movies = [
             {
                 id: 1,
@@ -1549,7 +1505,7 @@
             {
                 id: 2,
                 title: "Vidaamuyarchi (2025)",
-                image: "https://myimg.click/images/2025/02/08/Vidaamuyarchi-2025.png",
+                image: "https://catimages.org/images/2025/08/10/Maa-Nanna-Superhero-HDHub4u-Poster.jpg",
                 quality: "WEB-DL",
                 year: "2025",
                 rating: 7.8,
@@ -1574,7 +1530,7 @@
                 isTopRated: false,
                 uploadDate: new Date("2023-08-24")
             },
-             {
+            {
                 id: 3,
                 title: "Thandel (2025)",
                 image: "https://myimg.click/images/2025/02/08/Thandel-2025.jpg",
@@ -1616,6 +1572,7 @@
         const downloadModal = document.getElementById('downloadModal');
         const sliderContainer = document.getElementById('sliderContainer');
         const sliderNav = document.getElementById('sliderNav');
+        const titleFilter = document.getElementById('titleFilter');
         const industryFilter = document.getElementById('industryFilter');
         const yearFilter = document.getElementById('yearFilter');
         const languageFilter = document.getElementById('languageFilter');
@@ -1625,8 +1582,6 @@
         const menuToggle = document.getElementById('menuToggle');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
-        const fullPosterModal = document.getElementById('fullPosterModal');
-        const fullPosterImg = document.getElementById('fullPosterImg');
 
         // Current movie for download modal
         let currentDownloadMovie = null;
@@ -1808,27 +1763,6 @@
             popupOverlay.style.display = 'flex';
         }
 
-        // Full poster view functions
-        function openFullPoster() {
-            if (currentDownloadMovie) {
-                fullPosterImg.src = currentDownloadMovie.image;
-                fullPosterModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeFullPoster() {
-            fullPosterModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close full poster when clicking outside
-        fullPosterModal.addEventListener('click', function(e) {
-            if (e.target === fullPosterModal) {
-                closeFullPoster();
-            }
-        });
-
         // Render Hero Slider - HDHub4u Style
         function renderHeroSlider() {
             const featuredMovies = movies.filter(movie => movie.isPopular).slice(0, 5);
@@ -1923,11 +1857,16 @@
 
         // Apply filters
         function applyFilters() {
+            const title = titleFilter.value.toLowerCase().trim();
             const industry = industryFilter.value;
             const year = yearFilter.value;
             const language = languageFilter.value;
             
             let filteredMovies = [...movies];
+            
+            if (title) {
+                filteredMovies = filteredMovies.filter(movie => movie.title.toLowerCase().includes(title));
+            }
             
             if (industry !== 'all') {
                 filteredMovies = filteredMovies.filter(movie => movie.industry === industry);
